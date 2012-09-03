@@ -930,8 +930,8 @@ WeatherMenuButton.prototype = {
             let comment = weather_c.text;
             if (this._translate_condition)
                 comment = this.get_weather_condition(weather_c.code);
-            
-            this.rainSnowAlert(comment, weather_c.code);
+            if (this._rs_alert)
+                this.rainSnowAlert(comment, weather_c.code);
 
             let temperature = weather_c.temp;
             let chill = weather.wind.chill;
