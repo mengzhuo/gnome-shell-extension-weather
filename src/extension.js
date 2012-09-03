@@ -44,6 +44,7 @@ const Shell = imports.gi.Shell;
 const St = imports.gi.St;
 const Util = imports.misc.util;
 const NMClient = imports.gi.NMClient;
+const MessageTray = imports.ui.messageTray;
 const _ = Gettext.gettext;
 
 const Main = imports.ui.main;
@@ -64,6 +65,7 @@ const WEATHER_SHOW_TEXT_IN_PANEL_KEY = 'show-text-in-panel';
 const WEATHER_POSITION_IN_PANEL_KEY = 'position-in-panel';
 const WEATHER_SHOW_COMMENT_IN_PANEL_KEY = 'show-comment-in-panel';
 const WEATHER_REFRESH_INTERVAL = 'refresh-interval';
+const WEATHER_RS_ALERT_KEY = 'rain-snow-alert'; //RS:Rain or Snow
 
 // Keep enums in sync with GSettings schemas
 const WeatherUnits = {
@@ -472,7 +474,18 @@ WeatherMenuButton.prototype = {
 		this.loadConfig();
 	this._settings.set_int(WEATHER_REFRESH_INTERVAL,v);
 	},
-
+	get _rs_alert()
+	{
+		if(!this._settings)
+			this.loadConfig();
+	return this._settings.get_boolean(WEATHER_RS_ALERT_KEY);
+	},
+	set _rs_alert(v)
+	{
+		if(!this._settings)
+			this.loadConfig();
+		this._settings.set_boolean(WEATHER_RS_ALERT_KEY,v);
+	},
 	extractLocation : function()
 	{
 		if(arguments[0].search(">") == -1)
@@ -917,6 +930,8 @@ WeatherMenuButton.prototype = {
             let comment = weather_c.text;
             if (this._translate_condition)
                 comment = this.get_weather_condition(weather_c.code);
+            
+            this.rainSnowAlert(comment, weather_c.code);
 
             let temperature = weather_c.temp;
             let chill = weather.wind.chill;
@@ -1353,7 +1368,57 @@ WeatherMenuButton.prototype = {
 
         }
 
-    }
+    },
+    rainSnowAlert : function (comment, code){
+    	
+        code = parseInt(code, 10);
+	let iconName = this.get_weather_icon(code)[0];
+
+        if (! this._previousRainSnowFlag ){
+            this._previousRainSnowFlag = code;
+        }
+        
+        if (this._previousRainSnowFlag > 16 && this._previousRainSnowFlag < 35){
+        //last time is good weather
+            if (code < 17 || code > 34){
+                //and it's turning naughty...
+                this._showNotification( comment, iconName );
+            }
+        }
+        this._previousRainSnowFlag = code;
+    },
+    //from lockkeys extension
+    _showNotification: function(notification_text, icon_name) {
+		this._prepareSource(icon_name);
+
+		let notification = null;
+		if (this._source.notifications.length == 0) {
+			notification = new MessageTray.Notification(this._source, notification_text);
+			notification.setTransient(true);
+			notification.setResident(false);
+		} else {
+			notification = this._source.notifications[0];
+			notification.update(notification_text, null, { clear: true });
+		}
+
+		this._source.notify(notification);
+	},
+
+	_prepareSource: function(icon_name) {
+		if (this._source == null) {
+			this._source = new MessageTray.SystemNotificationSource();
+			this._source.createNotificationIcon = function() {
+				return new St.Icon({ icon_name: icon_name,
+					icon_type: St.IconType.SYMBOLIC,
+					icon_size: this.ICON_SIZE });
+			};
+			this._source.connect('destroy', Lang.bind(this,
+					function() {
+				this._source = null;
+			}));
+			Main.messageTray.add(this._source);
+		}
+	},
 };
 
 let weatherMenu;

@@ -45,6 +45,7 @@ const WEATHER_SHOW_TEXT_IN_PANEL_KEY = 'show-text-in-panel';
 const WEATHER_POSITION_IN_PANEL_KEY = 'position-in-panel';
 const WEATHER_SHOW_COMMENT_IN_PANEL_KEY = 'show-comment-in-panel';
 const WEATHER_REFRESH_INTERVAL = 'refresh-interval';
+const WEATHER_RS_ALERT_KEY = 'rain-snow-alert'; //RS:Rain or Snow
 
 // Soup session (see https://bugzilla.gnome.org/show_bug.cgi?id=661323#c64) (Simon Legner)
 const _httpSession = new Soup.SessionAsync();
@@ -513,6 +514,18 @@ WeatherSetting.prototype =
 		this.loadConfig();
 	this.Settings.set_int(WEATHER_REFRESH_INTERVAL,arguments[0]);
 	},
+	get rs_alert()
+	{
+		if(!this.Settings)
+			this.loadConfig();
+	return this.Settings.get_boolean(WEATHER_RS_ALERT_KEY);
+	},
+	set rs_alert(v)
+	{
+		if(!this.Settings)
+			this.loadConfig();
+		this.Settings.set_boolean(WEATHER_RS_ALERT_KEY,v);
+	},
 
 	extractLocation : function()
 	{
@@ -631,7 +644,7 @@ WeatherSetting.prototype =
 	var that = this;
 	this.Window = new Gtk.Builder();
 
-	this.Window.add_from_file("@EXTENSIONDIR@/weather-settings.ui");
+	this.Window.add_from_file("/usr/share/gnome-shell/extensions/weather@gnome-shell-extensions.gnome.org/weather-settings.ui");
 
 	this.Window.get_object("main-window").title = _("Weather Settings");
 
@@ -689,6 +702,8 @@ WeatherSetting.prototype =
 	this.addSwitch("text_in_panel");
 	this.addLabel(_("Conditions in Panel"));
 	this.addSwitch("comment_in_panel");
+	this.addLabel(_("Alert while Rain or Snow"));
+	this.addSwitch("rs_alert");
 	},
 
 	showWindow : function()
