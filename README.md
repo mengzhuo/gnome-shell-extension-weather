@@ -1,8 +1,7 @@
 ![Screenshot](https://github.com/neroth/gnome-shell-extension-weather/raw/master/data/Screenshot.jpg)
+![Screenshot](https://github.com/neroth/gnome-shell-extension-weather/raw/master/data/Screenshot2.jpg)
 
-*gnome-shell-extension-weather* is a simple extension for displaying weather conditions and forecasts in GNOME Shell.
-
-Compared with the original version, this fork features: multiple locations, no WOEID required, a symmetrical layout and a settings panel in JavaScript (Seed).
+*gnome-shell-extension-weather* is a simple extension for displaying weather conditions and forecasts in GNOME Shell, featuring support for multiple locations, no requirement for WOEID, a symmetrical layout and a settings panel through *gnome-shell-extension-prefs*.
 
 Currently, the weather report, including forecasts for today and tomorrow, is fetched from [Yahoo! Weather](http://weather.yahoo.com/).
 
@@ -22,9 +21,9 @@ Add the PPA *ppa:gnome-shell-extensions* to your source list, update the package
 	sudo apt-get update
 	sudo apt-get install gnome-shell-extension-weather
 	
-### [Fedora](http://download1.rpmfusion.org/free/fedora/updates/17/i386/repoview/gnome-shell-extension-weather.html)
+### [Fedora](http://rpmfusion.org/)
 
-Packages for Fedora 16 (*Verne*) and Fedora 17 (*Beefy Miracle*) are available in the [RPM Fusion](http://rpmfusion.org/) repositories. If these are not enabled on your system, please install them through the following command (root password required):
+Packages for Fedora are available in the [RPM Fusion](http://rpmfusion.org/) repositories. If these are not enabled on your system, please install them through the following command (root password required):
 
 	su -c 'yum localinstall --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-stable.noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-stable.noarch.rpm'
 Then, install *gnome-shell-extension-weather* (root password required):
@@ -52,7 +51,6 @@ Make sure you have the following dependencies installed:
 * *dconf*,
 * *gettext*,
 * *pkg-config*,
-* *seed*,
 * *git*,
 * *glib2*,
 * *gnome-common*,
@@ -71,7 +69,7 @@ Run the following commands:
 
 # Configuration
 
-Use the `Weather Settings` button to edit the configuration.
+Launch *gnome-shell-extension-prefs* (reachable also through the *Weather settings* button on the extension popup) and select *Gnome Shell Extension Weather by Neroth* from the drop-down menu to edit the configuration.
 
 ![Screenshot](https://github.com/neroth/gnome-shell-extension-weather/raw/master/data/weather-settings.gif)
 
@@ -81,15 +79,16 @@ You can also use *dconf-editor* or *gsettings* to configure the extension throug
 
 # Licence
 
-Copyright (C) 2011 - 2012
+Copyright (C) 2011 - 2013
 
+* Elad Alfassa <elad@fedoraproject.org>,
+* Mark Benjamin <weather.gnome.Markie1@dfgh.net>,
+* Simon Claessens <gagalago@gmail.com>,
 * Ecyrbe <ecyrbe+spam@gmail.com>,
 * Timur Kristóf <venemo@msn.com>,
-* Elad Alfassa <elad@fedoraproject.org>,
 * Simon Legner <Simon.Legner@gmail.com>,
-* Simon Claessens <gagalago@gmail.com>,
-* Christian Metzler <neroth@xeked.com>,
-* Mark Benjamin <weather.gnome.Markie1@dfgh.net>
+* Mattia Meneguzzo <odysseus@fedoraproject.org>,
+* Christian Metzler <neroth@xeked.com>.
 
 This file is part of *gnome-shell-extension-weather*.
 
